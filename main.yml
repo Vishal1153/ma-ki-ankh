@@ -1,0 +1,39 @@
+name: Python Bot Deployment
+
+on:
+  push:
+    branches:
+      - main  # Trigger on push to the main branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Set up Python
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      # Install dependencies
+      - name: Install dependencies
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # Make binary executable
+      - name: Make LEGEND executable
+        run: chmod +x LEGEND || echo "Binary not found, skipping."
+
+      # Run the Python script
+      - name: Run the bot
+        run: |
+          source venv/bin/activate
+          python LEGEND.py
